@@ -1,0 +1,7 @@
+export const GET_HOUSES = 'GET_HOUSES'
+export const GET_HOUSE = 'GET_HOUSE'
+export const GET_USER = 'GET_USER'
+export const GET_USER_HOUSES = 'GET_USER_HOUSES'
+export const SAVE_TOKEN = 'SAVE_TOKEN'
+export const SIGNUP = 'SIGNUP'
+export const LOGOUT = 'LOGOUT'
