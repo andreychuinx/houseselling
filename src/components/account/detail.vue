@@ -7,7 +7,10 @@
     </el-row>
     <el-row>
       <el-col :span="8">
-        <el-button type="primary" @click="methodAddHouse">Add House</el-button>
+        <router-link :to="{name : 'addhouse'}">
+          <el-button type="primary" >Add House</el-button>
+        </router-link> 
+        
         <el-button type="warning">Edit User Profile</el-button>
       </el-col>
 

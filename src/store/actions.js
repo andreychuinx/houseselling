@@ -71,19 +71,107 @@ export default {
         })
       })
       .catch(err => {
-        console.log(err
-        )
+        console.log(err)
       })
   },
-  dataUserHouses(context, { user }){
-    axios.get(`/houses/user/${user}`)
-    .then(result => {
-      context.commit(types.GET_USER_HOUSES, {
-        data : result.data.data
+  dataUserHouses(context, { user }) {
+    axios
+      .get(`/houses/user/${user}`)
+      .then(result => {
+        context.commit(types.GET_USER_HOUSES, {
+          data: result.data.data,
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
+  addHouse(context, { data }) {
+    return new Promise((resolve, reject) => {
+
+      const dt = new FormData()
+      dt.append('title', data.title)
+      dt.append('description', data.description)
+      dt.append('property', data.property)
+      dt.append('harga', data.harga)
+      dt.append('kamarTidur', data.kamarTidur)
+      dt.append('jumlahLantai', data.jumlahLantai)
+      dt.append('kamarMandi', data.kamarMandi)
+      dt.append('sertificate', data.sertificate)
+      dt.append('luasTanah', data.luasTanah)
+      dt.append('luasBangunan', data.luasBangunan)
+      dt.append('address', data.address)
+      dt.append('longitude', data.coordinates[0])
+      dt.append('latitude', data.coordinates[1])
+      data.photos.forEach(photo => {
+        dt.append('image', photo)
+      })
+      axios
+        .post('/houses', dt)
+        .then(result => {
+          context.commit(types.ADD_HOUSE, {
+            data : result.data.data
+          })
+          resolve()
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  },
+  editHouse(context, { data, id }){
+    return new Promise((resolve, reject) => {
+      const dt = new FormData()
+      dt.append('title', data.title)
+      dt.append('description', data.description)
+      dt.append('property', data.property)
+      dt.append('harga', data.harga)
+      dt.append('kamarTidur', data.kamarTidur)
+      dt.append('jumlahLantai', data.jumlahLantai)
+      dt.append('kamarMandi', data.kamarMandi)
+      dt.append('sertificate', data.sertificate)
+      dt.append('luasTanah', data.luasTanah)
+      dt.append('luasBangunan', data.luasBangunan)
+      dt.append('address', data.address)
+      dt.append('longitude', data.coordinates[0])
+      dt.append('latitude', data.coordinates[1])
+      data.photos.forEach(photo => {
+        dt.append('image', photo)
+      })
+      axios
+        .put(`/houses/${id}`, dt)
+        .then(result => {
+          console.log(result)
+          context.commit(types.EDIT_HOUSE, {
+            data : result.data.data
+          })
+          resolve()
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  },
+  deleteHouse(context, {id}){
+    return new Promise((resolve, reject)=>{
+      axios.delete(`/houses/${id}`)
+      .then(result => {
+        // context.commit(types.DELETE_HOUSE, {
+        //   data : result.data.data
+        // })
+        resolve(result.data.data)
+      })
+      .catch(err =>{
+        reject(err)
       })
     })
-    .catch(err => {
-      console.log(err)
+  },
+  searchHouse(context, {search}){
+    axios.get(`/search?search=${search}`)
+    .then(result=>{
+      context.commit(types.GET_SEARCH, {
+        data: result.data.data,
+      })
     })
   }
 }

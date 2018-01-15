@@ -31,5 +31,26 @@ export default {
   },
   [types.GET_USER_HOUSES](state, { data }){
     state.userHouses = data
+  },
+  [types.ADD_HOUSE](state, { data }){
+    let newHouses = [data, ...state.houses]
+    state.houses = newHouses
+  },
+  [types.EDIT_HOUSE](state, { data }){
+    state.useHouses = state.userHouses.map(house => {
+      if(house._id == data._id){
+        return data
+      }else{
+        return house
+      }
+    })
+  },
+  [types.DELETE_HOUSE](state, { data }){
+    state.useHouses = state.useHouses.filter(house => {
+      return house._id !== data._id
+    })
+  },
+  [types.GET_SEARCH](state, { data }){
+    state.search = data
   }
 }

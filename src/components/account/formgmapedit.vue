@@ -19,26 +19,17 @@
 import debounce from 'debounce'
 export default {
   name: 'FormItemLocation',
-  props: ['value'],
-  // mounted() {
-  //   if(this.value.coordinates[0]){
-  //     this.mapCenter = { 
-  //       lat: this.value.coordinates[1],
-  //       lng: this.value.coordinates[0] 
-  //     }
-  //     this.address = this.value.address
-  //     this.zoom = 15
-  //     this.marker = {
-  //       position: this.mapCenter,
-  //     }
-  //   }
-  // },
+  props: ['coordinates', 'addressDef'],
   data() {
     return {
-      zoom : 4,
-      address : '',
-      mapCenter: { lat: -2.4931308132648247, lng: 118.47106932500003 },
-      marker: null,
+      zoom : 15,
+      address : this.addressDef,
+      mapCenter: { lat: this.coordinates[1], lng: this.coordinates[0] },
+      marker: {
+        position : {
+          lat: this.coordinates[1], lng: this.coordinates[0]
+        }
+      },
       ruleCoords : {
         validator : (rule, value, cb) => {
           if(this.marker){

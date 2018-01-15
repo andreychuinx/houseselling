@@ -91,15 +91,18 @@ export default {
       })
         .then(() => {
           this.$store.commit('LOGOUT')
+          console.log('test')
           this.$message({
             type: 'success',
             message: 'Logout successfull',
           })
+          this.$router.push({ name: 'homePage'})
         })
-        .catch(() => {
+        .catch(err => {
+          console.log(err)
           this.$message({
             type: 'info',
-            message: 'Delete canceled',
+            message: 'Logout canceled',
           })
         })
     },

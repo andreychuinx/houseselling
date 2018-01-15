@@ -1,9 +1,10 @@
 <template>
-  <el-row style="padding: 10px">
+  <div>
+     <el-row style="padding: 10px" v-if="loaded">
     <el-col :span="18">
-      <h1>ADD HOUSE</h1>
-      <el-form ref="form" label-width="120px" size="mini">
-        <el-form-item label="Title">
+      <h1>EDIT HOUSE {{getHouse.title}}</h1>
+      <el-form ref="getHouse" label-width="120px" size="mini">
+        <el-form-item label="Title" prop="title">
           <el-input v-model="formInput.title"></el-input>
         </el-form-item>
         <el-form-item label="Description">
@@ -44,7 +45,8 @@
 
 
         <el-form-item label="Photos">
-          <el-upload action="" list-type="picture-card" :on-change="fileInput" :on-remove="handleRemove" :auto-upload="false" v-model="formInput.dialogImageUrl" >
+          
+          <el-upload action="" list-type="picture-card" :on-change="fileInput" :on-remove="handleRemove" :auto-upload="false" v-model="formInput.dialogImageUrl" :file-list="formInput.photos">
             <i class="el-icon-plus"></i>
           </el-upload>
           <el-dialog :visible.sync="formInput.dialogVisible" size="tiny">
@@ -54,7 +56,7 @@
 
 
 
-        <form-gmap :coordinates="coordinateDefault" :model="formInput.coordinates" @gmap="locationFromGmap">
+        <form-gmap :coordinates="getHouse.loc.coordinates" :addressDef="getHouse.address" :model="formInput.coordinates" @gmap="locationFromGmap">
         </form-gmap>
 
         <el-form-item size="large">
@@ -66,19 +68,20 @@
       </el-form>
     </el-col>
   </el-row>
-
+  </div>
 </template>
 
 <script>
-import formGmap from './formgmap'
+import {mapGetters, mapActions} from 'vuex'
+import formGmap from './formgmapedit'
 export default {
-  name: 'addHouse',
+  name: 'editHouse',
   components: {
     formGmap,
   },
-  data() {
+  data(){
     return {
-      coordinateDefault : [106.7546955, -6.2372179],
+      loaded : false,
       formInput: {
         jumlahLantai: 1,
         dialogImageUrl: '',
@@ -127,40 +130,75 @@ export default {
       },
     }
   },
+  computed: {
+    ...mapGetters(['getHouse'])
+  },
+  mounted(){
+    this.$store.dispatch('dataHouse', {
+      id: this.$route.params.id
+    })
+  },
   methods: {
     locationFromGmap(location){
       this.formInput.coordinates = location.coordinates
       this.formInput.address = location.address
-      // console.log(location, 'location')
-      // console.log(this)
     },
     onSubmit() {
-      this.$store.dispatch('addHouse', {
-        data : this.formInput
+      this.$store.dispatch('editHouse', {
+        data : this.formInput,
+        id : this.$route.params.id
       })
       .then(()=>{
         this.$message({
           type: 'success',
-          message: 'Add House Successfull'
+          message: 'Edit House Successfull'
         })
         this.$router.push({name : 'accountPage'})
       })
       .catch(err =>{
         console.log(err)
       })
+      console.log(this.formInput)
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList)
+      console.log(this.formInput.photos[0])
+      console.log(file.uid)
+      this.formInput.photos = this.formInput.photos.filter(photo => {
+        return photo.uid !== file.uid
+        })
+      
     },
     fileInput(file, fileList) {
+      console.log(file)
       this.formInput.photos = fileList.map(photo => photo.raw)
     },
   },
+  watch: {
+    getHouse(){
+      this.loaded = true
+      this.formInput.title = this.getHouse.title
+      this.formInput.description = this.getHouse.description
+      this.formInput.jumlahLantai = this.getHouse.jumlahLantai
+      this.formInput.luasTanah = this.getHouse.luasTanah
+      this.formInput.luasBangunan = this.getHouse.luasBangunan
+      this.formInput.harga = this.getHouse.harga
+      this.formInput.kamarMandi = this.getHouse.kamarMandi
+      this.formInput.kamarTidur = this.getHouse.kamarTidur
+      this.formInput.address = this.getHouse.address
+      this.formInput.property = this.getHouse.property
+      this.formInput.sertificate = this.getHouse.sertificate
+      this.formInput.coordinates = this.getHouse.loc.coordinates
+      this.getHouse.photos.forEach(link => {
+        this.formInput.photos.push({url : link})
+      });
+      // this.formInput.photos = this.getHouse.photos
+      
+    }
+  }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 .el-col {
   text-align: left;
 }

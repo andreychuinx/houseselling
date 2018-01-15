@@ -14,4 +14,7 @@ export default {
   getUserHouses: state => {
     return state.userHouses
   },
+  getSearch: state => {
+    return state.search
+  }
 }

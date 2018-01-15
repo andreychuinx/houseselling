@@ -3,7 +3,10 @@
     <el-main>
       <div class="block jumbotron">
         <span class="demonstration">Search Here</span>
-        <el-autocomplete v-model="state4" placeholder="Please input"></el-autocomplete>
+        
+        <el-input v-model="state4" placeholder="Please input"></el-input>
+        <el-button @click="handleSearch">Submit
+        </el-button>
       </div>
     </el-main>
 </template>
@@ -19,8 +22,14 @@ export default {
     };
   },
   methods: {
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+    handleSearch() {
+      this.$router.push({
+        name : 'searchPage',
+        query:{
+          title: this.state4
+        }
+        
+       })
     }
   }
 };

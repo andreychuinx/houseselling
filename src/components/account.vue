@@ -5,7 +5,10 @@
     <jumbotron-page>
     </jumbotron-page>
     <el-row>
-      <el-col style="padding:20px" v-if="loaded">
+      <router-view v-if="this.$route.name == 'addhouse' || this.$route.name == 'edithouse'">
+      </router-view>
+      <div v-else>
+        <el-col style="padding:20px" v-if="loaded">
 
         <el-tabs tabPosition="top" style="height: 200px;">
           <el-tab-pane label="Info">
@@ -22,6 +25,8 @@
         <account-addhouse>
         </account-addhouse>
       </el-col>
+      </div>
+      
     </el-row>
 
   </div>

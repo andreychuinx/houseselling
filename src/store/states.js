@@ -4,4 +4,5 @@ export default {
   houses : [],
   house : {},
   userHouses : [],
+  search : []
 }
